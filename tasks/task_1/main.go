@@ -20,10 +20,7 @@ type Action struct {
 
 func main() {
 	var h Human
-	h.name = "RERTRETERTREGEWRFGBWRTHWTR"
+	h.name = "Pasha"
 	act := &Action{Human: h}
 	act.talk("what????")
 }
-
-// агрегация
-//композиция
