@@ -14,13 +14,13 @@ func main() {
 
 	var waitGroup sync.WaitGroup
 	for i, _ := range arr {
-		waitGroup.Add(1)
+		waitGroup.Add(1) // увеличивет счетчик на 1
 		go func(i int) {
-			defer waitGroup.Done()
+			defer waitGroup.Done() // уменьшает счетчик на 1 -> делает Add(-1)
 			res[i] = arr[i] * arr[i]
 		}(i)
 	}
 
-	waitGroup.Wait()
+	waitGroup.Wait() //Функция Wait() будет ждать, пока счетчик в переменной WaitGroup не станет 0
 	fmt.Println(res)
 }
