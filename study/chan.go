@@ -73,8 +73,7 @@ func main() {
 
 	for i := 0; i < 5; i++ {
 		fmt.Println(<-ch) // при чтение из закрытого канала получаем нулевое значение его типа данных - false
-		// при записи в закрытый канал возникает паника 
-		
+		// при записи в закрытый канал возникает паника
 
 		// 4 аксиомы каналов!!
 	}
@@ -90,3 +89,35 @@ func main() {
 // created by main.main in goroutine 1
 //         /Users/endeharh/wb_l1/study/chan.go:54 +0x24e
 // exit status 2
+
+//go run -race:
+// ==================
+// WARNING: DATA RACE
+// Write at 0x00c00010e010 by main goroutine:
+//   runtime.closechan()
+//       /usr/local/go/src/runtime/chan.go:357 +0x0
+//   main.main()
+//       /Users/endeharh/wb_l1/study/chan.go:69 +0x4fd
+
+// Previous read at 0x00c00010e010 by goroutine 10:
+//   runtime.chansend()
+//       /usr/local/go/src/runtime/chan.go:160 +0x0
+//   main.printer()
+//       /Users/endeharh/wb_l1/study/chan.go:16 +0x30
+//   main.main.func3()
+//       /Users/endeharh/wb_l1/study/chan.go:54 +0x33
+
+// Goroutine 10 (running) created at:
+//   main.main()
+//       /Users/endeharh/wb_l1/study/chan.go:54 +0x32b
+// ==================
+// false
+// false
+// false
+// false
+// false
+// panic: send on closed channel
+
+//В строке 54 в channels.go происходит закрытие канала, а в строке 14 мы видим запись
+//в тот же канал, которая, похоже, и является причиной проблемы с со- стоянием гонки.
+//Строка 54 содержит close(ch), тогда как строка 14 — ch <- true.
