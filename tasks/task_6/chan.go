@@ -6,17 +6,29 @@ import (
 	"fmt"
 )
 
-// func write() {
-// 	fmt.Println("a")
+func write() {
+	for {
+		fmt.Println("a")
+	}
+
+}
+
+// func stop(ch chan bool) {
+
 // }
 
 func main() {
 	ch := make(chan int)
 	stop := make(chan bool)
 
-	for i := 0; ; i++ {
+	fmt.Println("Doing smth")
+	go write()
+
+	for i := 0; i < 10; i++ {
+
 		select {
-		case ch <- i:
+		//case ch <- i:
+
 		case <-stop:
 			close(ch)
 			return
@@ -24,5 +36,6 @@ func main() {
 	}
 
 	stop <- true
+	fmt.Println("Stop")
 
 }
