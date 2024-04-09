@@ -4,38 +4,31 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
-func write() {
+func worker(stop chan bool) {
 	for {
-		fmt.Println("a")
+		select {
+		case <-stop:
+			fmt.Println("stop working")
+			close(stop)
+			return
+		default:
+			fmt.Println("working")
+			time.Sleep(time.Second * 1)
+		}
 	}
 
 }
 
-// func stop(ch chan bool) {
-
-// }
-
 func main() {
-	ch := make(chan int)
 	stop := make(chan bool)
 
-	fmt.Println("Doing smth")
-	go write()
-
-	for i := 0; i < 10; i++ {
-
-		select {
-		//case ch <- i:
-
-		case <-stop:
-			close(ch)
-			return
-		}
-	}
+	go worker(stop)
+	time.Sleep(time.Second * 5)
 
 	stop <- true
-	fmt.Println("Stop")
+	fmt.Println("program has finished")
 
 }
